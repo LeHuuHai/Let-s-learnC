@@ -1,0 +1,237 @@
+#include<stdio.h>
+#include<string.h>
+#define svmax 100
+
+struct hoten{
+	char ho[10];
+	char dem[20];
+	char ten[10];
+};
+
+struct diem{
+	float toan;
+	float van;
+	float anh;
+	float tbc;
+};
+
+struct sinhvien{
+	int MSSV;
+	struct hoten hoTen;
+	struct diem diem;
+	int tuoi;
+	char gioiTinh[10];
+};
+
+void nhapTen(struct hoten *ten){
+	printf("Ho: ");
+	scanf("%s", ten->ho);
+	printf("Dem: ");
+	getchar();
+	fgets(ten->dem,10,stdin);	
+	printf("Ten: ");
+	scanf("%s", ten->ten);
+}
+
+void nhapDiem(struct diem *diem){
+	printf("Toan: ");
+	scanf("%f", &diem->toan);
+	printf("Van: ");
+	scanf("%f",&diem->van);
+	printf("Anh: ");
+	scanf("%f",&diem->anh);
+	diem->tbc= (diem->toan + diem->van +diem->anh)/3;
+}
+
+struct sinhvien nhapsv(){
+	struct sinhvien SV;
+	printf("MSSV: ");
+	scanf("%d", &SV.MSSV);
+	nhapTen(&SV.hoTen);
+	printf("Tuoi: ");
+	scanf("%d", &SV.tuoi);
+	printf("Gioi Tinh: ");
+	scanf("%s", SV.gioiTinh);
+	nhapDiem(&SV.diem);
+	return SV;
+}
+
+void xuatsv(struct sinhvien SV){
+	printf("%-10d %-10s %-20s %-10s %-10d %-10s %-10.2f %-10.2f %-10.2f %-10.2f\n",
+			 SV.MSSV, SV.hoTen.ho, SV.hoTen.dem, SV.hoTen.ten, SV.tuoi, SV.gioiTinh, SV.diem.toan, SV.diem.van, SV.diem.anh, SV.diem.tbc );
+}
+
+void sxten(int soLuong, struct sinhvien danhSach[]){
+	int count=soLuong;
+	while(count>1){
+		int i;
+		for(i=0;i<count-1;i++){
+			struct sinhvien *a=&danhSach[i];
+			struct sinhvien *b=&danhSach[i+1];	
+			if(strcmp(danhSach[i].hoTen.ten,danhSach[i+1].hoTen.ten)>0){
+				struct sinhvien tmp=*a;
+				*a=*b;
+				*b=tmp;
+			}
+		}
+		count--;
+	}
+}
+
+void sxdiem(int soLuong, struct sinhvien danhSach[]){
+	int count=soLuong;
+	while(count>1){
+		int i;
+		for(i=0;i<count-1;i++){
+			struct sinhvien *a=&danhSach[i];
+			struct sinhvien *b=&danhSach[i+1];	
+			if(danhSach[i].diem.tbc >danhSach[i+1].diem.tbc){
+				struct sinhvien tmp=*a;
+				*a=*b;
+				*b=tmp;
+			}
+		}
+		count--;
+	}
+}
+
+void timkiemsv(int soLuong, struct sinhvien danhSach[]){
+	char search[10];
+	printf("Nhap ten: ");
+	getchar();
+	fgets(search,10,stdin);
+	search[strlen(search)-1]='\0';
+	int i, flag=0;
+	printf("%-10s %-10s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s \n","MSSV","Ho","Dem","Ten","Tuoi","Gioi Tinh","Diem Toan", "Diem Van", "Diem Anh", "Diem TBC");
+	for(i=0;i<soLuong;i++){
+		if(strcmp(danhSach[i].hoTen.ten,search)==0){
+			xuatsv(danhSach[i]);
+			flag=1;
+		}
+	}
+	if(flag==0){
+		printf("Khong ton tai!\n");
+	}
+}
+
+void ghiFile(int start, int soLuong, struct sinhvien danhSach[]){
+	FILE *f;
+	f=fopen("dssv.txt","a");
+	int i;
+	for(i=start;i<soLuong;i++){
+		struct sinhvien SV=danhSach[i];
+		fprintf(f,"%-10d %-10s %-20s %-10s %-10d %-10s %-10.2f %-10.2f %-10.2f %-10.2f\n",
+			 SV.MSSV, SV.hoTen.ho, SV.hoTen.dem, SV.hoTen.ten, SV.tuoi, SV.gioiTinh, SV.diem.toan, SV.diem.van, SV.diem.anh, SV.diem.tbc );
+	}
+	fclose(f);
+}
+
+void docFile(int *soLuong, struct sinhvien danhSach[]){
+	FILE *f;
+	struct sinhvien SV;
+	f=fopen("dssv.txt","r");
+	int i=0;
+	if(f){
+		for(;;){
+			fscanf(f,"%10d %10s %20[^\n] %10s %10d %10s %10f %10f %10f %10f\n",
+			 	&SV.MSSV, SV.hoTen.ho, SV.hoTen.dem, SV.hoTen.ten, &SV.tuoi, SV.gioiTinh, &SV.diem.toan, &SV.diem.van, &SV.diem.anh, &SV.diem.tbc );
+			danhSach[i]=SV;
+			i++;
+			if(feof(f)){
+				break;
+			}
+		}
+	}
+	*soLuong=i;
+	fclose(f);
+	
+}
+
+	
+
+int main(){
+	struct sinhvien danhSach[svmax];
+	struct sinhvien SV;
+	int soLuong;
+	int i;
+	int luaChon=1;
+	do{
+		printf("=======MENU=======\n");
+		printf("1.Khoi tao danh sach moi.\n2.Them sinh vien vao danh sach.\n3.Them nhieu sinh vien vao danh sach.\n4.Hien thi danh sach.\n5.Sap xep theo ten.\n6.Sap xep theo diem.\n7.Tim sinh vien theo ten.\n0.Thoat chuong trinh.\n");
+		printf("Ban chon??\n");
+		scanf("%d", &luaChon);
+		switch(luaChon){
+			case 1:{
+				int start=0;
+				printf("So luong sinh vien: ");
+				scanf("%d", &soLuong);
+				for(i=0;i<soLuong;i++){
+					danhSach[i]=nhapsv();
+				}
+				ghiFile(start,soLuong,danhSach);
+				break;
+			}
+			case 2:{
+				int start=soLuong;
+				docFile(&soLuong,danhSach);
+				danhSach[soLuong]=nhapsv();
+				soLuong++;
+				ghiFile(start,soLuong,danhSach);
+				break;
+			}
+			case 3:{
+				int start=soLuong;
+				docFile(&soLuong,danhSach);
+				int add;
+				printf("So sinh vien them: ");
+				scanf("%d", &add);
+				for(i=0;i<add;i++){
+					danhSach[soLuong]=nhapsv();
+				}
+				soLuong+=add;
+				ghiFile(start,soLuong,danhSach);
+				break;
+			}
+			case 4:{
+				docFile(&soLuong,danhSach);
+				printf("%-10s %-10s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s ","MSSV","Ho","Dem","Ten","Tuoi","Gioi Tinh","Diem Toan", "Diem Van", "Diem Anh", "Diem TBC");
+				for(i=0;i<soLuong;i++){
+					xuatsv(danhSach[i]);
+				}			
+				break;
+			}
+			case 5:{
+				docFile(&soLuong,danhSach);
+				sxten(soLuong,danhSach);
+				printf("%-10s %-10s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s ","MSSV","Ho","Dem","Ten","Tuoi","Gioi Tinh","Diem Toan", "Diem Van", "Diem Anh", "Diem TBC");
+				for(i=0;i<soLuong;i++){
+					xuatsv(danhSach[i]);
+				}		
+				break;
+			}
+			case 6:{
+				docFile(&soLuong,danhSach);
+				sxdiem(soLuong,danhSach);
+				printf("%-10s %-10s %-20s %-10s %-10s %-10s %-10s %-10s %-10s %-10s ","MSSV","Ho","Dem","Ten","Tuoi","Gioi Tinh","Diem Toan", "Diem Van", "Diem Anh", "Diem TBC");
+				for(i=0;i<soLuong;i++){
+					xuatsv(danhSach[i]);
+				}	
+				break;
+			}
+			case 7:{
+				docFile(&soLuong,danhSach);
+				timkiemsv(soLuong,danhSach);
+				break;
+			}
+			case 0:{
+				return 0;
+				break;
+			}
+			default:{
+				printf("Sai chuc nang! Hay chon lai");
+				break;
+			}
+		}	
+
+	}while(luaChon);
+}
