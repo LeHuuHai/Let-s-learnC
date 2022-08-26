@@ -1,0 +1,27 @@
+#include<stdio.h>
+int main(){
+	int h;
+	printf("h: ");
+	scanf("%d", &h);
+	int arr[20][20]={};
+	int max;
+	int i,j;
+	for(i=0;i<2*h-1;i++){
+		max=(i<=h-1)? i+1 : 2*h-1-i;
+		for(j=h-1;j>=0;j--){
+			arr[i][j]=max--;
+			if(max==0) break;
+		}
+	}
+	for(j=0;j<h;j++){
+		for(i=0;i<2*h-1;i++){
+			if(arr[i][j]!=0){
+				printf("%d ", arr[i][j]);
+			}else{
+				printf("  ");
+			}
+		}
+		printf("\n");
+	}
+	return 0;
+}
