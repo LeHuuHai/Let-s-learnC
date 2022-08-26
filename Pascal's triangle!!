@@ -1,0 +1,23 @@
+#include<stdio.h>
+
+int Pascal(int h, int k){
+	if((k==1)||(h==k)){
+		return 1;
+	}
+	return Pascal(h-1,k-1)+Pascal(h-1,k);
+}
+
+int main(){
+	int row;
+	printf("row: ");
+	scanf("%d", &row);
+	int i,j;
+	for(i=1;i<=row;i++){
+		printf("row %d: ",i);
+		for(j=1;j<=i;j++){
+			printf("%d ", Pascal(i, j));
+		}
+		printf("\n");
+	}
+	return 0;
+} 
