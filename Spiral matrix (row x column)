@@ -1,0 +1,55 @@
+#include<stdio.h>
+
+int main(){
+	int arr[50][50]={};
+	int row, column;
+	printf("row: ");
+	scanf("%d", &row);
+	printf("column: ");
+	scanf("%d", &column);
+	int i, j;
+	int d=0;
+	int startR=0, endR=column-1, startC=0, endC=row-1;
+	while((startR<=endR)&&(startC<=endC)){
+		i=startR;
+		j=startC;
+		for(i;i<=endR;i++){
+			arr[i][j]=d++;
+		}
+		
+		i--;
+		j++;
+		if(j>endC) break;
+		for(j;j<=endC;j++){
+			arr[i][j]=d++;
+		}
+		
+		j--;
+		i--;
+		if(i<0) break;
+		for(i;i>=startR;i--){
+			arr[i][j]=d++;
+		}
+		
+		i++;
+		j--;
+		for(j;j>startC;j--){
+			arr[i][j]=d++;
+		}
+		
+		startR++;
+		endR--;
+		startC++;
+		endC--;
+	}
+	
+	printf("%dx%d\n", row, column);
+	for(j=0;j<row;j++){
+		for(i=0;i<column;i++){
+			printf("%3d ", arr[i][j]);
+		}
+		printf("\n");
+	}
+	
+	return 0;
+}
