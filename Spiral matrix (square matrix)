@@ -1,0 +1,46 @@
+#include<stdio.h>
+
+int main(){
+	int arr[50][50]={};
+	int h;
+	printf("h: ");
+	scanf("%d", &h);
+	int i, j;
+	int d=0;
+	int start=0, end=h-1;
+	while(start<=end){
+		i=start;
+		j=start;
+		for(i;i<=end;i++){
+			arr[i][j]=d++;
+		}
+		
+		i--;
+		for(j+=1;j<=end;j++){
+			arr[i][j]=d++;
+		}
+		
+		j--;
+		for(i-=1;i>=start;i--){
+			arr[i][j]=d++;
+		}
+		
+		i++;
+		for(j-=1;j>start;j--){
+			arr[i][j]=d++;
+		}
+		
+		start++;
+		end--;
+	}
+	
+	printf("%dx%d\n", h, h);
+	for(j=0;j<h;j++){
+		for(i=0;i<h;i++){
+			printf("%3d ", arr[i][j]);
+		}
+		printf("\n");
+	}
+	
+	return 0;
+}
