@@ -1,0 +1,38 @@
+#include<stdio.h>
+#include<string.h>
+
+int main(){
+	float x;
+	int b;
+	printf("nhap x: ");
+	scanf("%f", &x);
+	printf("nhap co so b: ");
+	scanf("%d", &b);
+	char s[10], t[10];
+	const char c[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I',
+		'J','K','L','M','N','O','P','Q','R','S','T','U','V','X','Y','Z','W'};
+	int xa= (int)x;
+	int i=0;
+	do{
+		s[i]=c[(xa%b)];
+		xa/=b;
+		i++;
+	}while(xa!=0);
+	
+	printf("%f (10)= ",x);
+	strrev(s);
+	printf("%s",s);
+	printf(".");
+	
+	i=0;
+	float xb=x-(int)x;
+	do{
+		xb*=b;
+		t[i++]=c[(int)xb];
+		xb-=(int)xb;
+	}while(xb!=0);
+	printf("%s",t);	
+	printf("(%d)",b);
+		
+	return 0;
+}
